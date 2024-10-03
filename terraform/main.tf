@@ -4,7 +4,7 @@ provider "aws" {
 
 resource "aws_key_pair" "deployer" {
     key_name    = "deployer-key"
-    public_key = file("~/.ssh/id_rsa.pub")
+    public_key_material = file("~/.ssh/id_rsa.pub")
 }
 
 
@@ -61,7 +61,7 @@ resource "aws_instance" "monitoring" {
 
 resource "aws_db_instance" "default" {
     engine              =  "postgres"
-    instance_class      =  "db.t2.micro"
+    db_instance_class   =  "db.t2.micro"
     allocated_storage   = 20
     username            = "admin"
     password            = "password"
@@ -73,10 +73,10 @@ resource "aws_db_instance" "default" {
   }
 }
 
-
 resource "aws_s3_bucket_acl" "mybucket" {
     bucket = "mybucket"
     acl    = "private"
+    endpoint = "s3.us-west-1.amazonaws.com"
 }
 
 resource "aws_lambda_function" "my_lambda" {
@@ -84,7 +84,7 @@ resource "aws_lambda_function" "my_lambda" {
     role               = aws_iam_role.lambda_exec.arn
     handler            = "index.handler"
     runtime            = "nodejs12.x"
-    filename           = "lambda_function.zip"
+    filename           = "index.zip"
     source_code_hash   = filebase64sha256("index.zip")
 }
 
