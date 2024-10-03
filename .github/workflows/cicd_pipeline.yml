@@ -1,4 +1,4 @@
-name: cicd pipeline for terraform ans ansible
+name: cicd pipeline for terraform and ansible
 on:
     push:
         branches:
@@ -19,9 +19,13 @@ jobs:
               with:
                 aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
                 aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-                aws-region: us-east-1
-          
-
+                aws-region: us-east-1         
+            
+            - name: setup ssh keys
+              run: |
+                echo "${{ vars.SSH_PUBLIC_KEY }}" > ~/.ssh/id_rsa.pub
+                chmod 600 ~/.ssh/id_rsa.pub
+              
             - name: Terraform init
               run: terraform init
               working-directory: ./terraform
@@ -48,8 +52,6 @@ jobs:
               run: |
                 echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
                 chmod 600 ~/.ssh/id_rsa
-                echo "${{ vars.SSH_PUBLIC_KEY }}" > ~/.ssh/id_rsa.pub
-                chmod 600 ~/.ssh/id_rsa.pub
 
             - name: install prom
               run: ansible-playbook -i ./ansible/inventory.ini ./ansible/promethus.yml

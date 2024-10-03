@@ -63,15 +63,18 @@ resource "aws_db_instance" "default" {
     engine              =  "postgres"
     instance_class      =  "db.t2.micro"
     allocated_storage   = 20
-    name                = "mydb"
     username            = "admin"
     password            = "password"
     publicly_accessible = true
     skip_final_snapshot = true
+
+    tags = {
+    Name = "mydb"
+  }
 }
 
 
-resource "aws_s3_bucket" "mybucket" {
+resource "aws_s3_bucket_acl" "mybucket" {
     bucket = "mybucket"
     acl    = "private"
 }
@@ -83,6 +86,10 @@ resource "aws_lambda_function" "my_lambda" {
     runtime            = "nodejs12.x"
     filename           = "lambda_function.zip"
     source_code_hash   = filebase64sha256("lambda_function.zip")
+}
+
+resource "local_exec" "create_zip" {
+  command = "zip -r lambda_function.zip index.js"
 }
 
 resource "aws_iam_role" "lambda_exec" {
@@ -105,6 +112,6 @@ resource "aws_iam_role" "lambda_exec" {
 
 resource "aws_cloudwatch_log_group" "lambda_log_group" {
     name      =  "/aws/lambda/myLambdaFunction"
-    retenion_in_days = 14
+    retention_in_days = 14
 }
 
