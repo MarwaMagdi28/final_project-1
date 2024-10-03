@@ -17,8 +17,8 @@ resource "aws_db_instance" "default" {
     engine_version = "16.3"  # Choose a supported engine version
     license_model = "postgresql-license"  # Or "bring-your-own-license" if applicable
     allocated_storage   = 20
-    username            = "admin"
-    password            = "password"
+    username            = "moro"
+    password            = "moro@123"
     publicly_accessible = true
     skip_final_snapshot = true
 
