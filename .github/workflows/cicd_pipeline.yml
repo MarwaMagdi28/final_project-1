@@ -5,13 +5,13 @@ on:
             - main
 jobs:
     terraform:
-        name: terraform deployment
+        name: Terraform deployment
         runs-on: ubuntu-latest
         steps:
-            - name: checkout config files
+            - name: Checkout config files
               uses: actions/checkout@v2
 
-            - name: setup terraform 
+            - name: Setup terraform 
               uses: hashicorp/setup-terraform@v3.1.2
 
             - name: "Configure AWS Credentials" 
@@ -21,7 +21,7 @@ jobs:
                 aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
                 aws-region: us-east-1         
             
-            - name: setup ssh keys
+            - name: Setup ssh keys
               run: |
                 mkdir ~/.ssh
                 echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
@@ -34,27 +34,27 @@ jobs:
               run: terraform init
               working-directory: ./terraform
 
-            - name: terraform apply
+            - name: Terraform apply
               run: terraform apply -auto-approve
               working-directory: ./terraform
 
     ansible:
-        name: ansible deployments
+        name: Ansible deployments
         needs: terraform
         runs-on: ubuntu-latest
         steps:
-            - name: checkout
+            - name: Checkout
               uses: actions/checkout@v2
 
-            - name: install ansible
+            - name: Install ansible
               run: sudo apt update && sudo apt install ansible -y
 
-            - name: install ansible galaxy roles
+            - name: Install ansible galaxy roles
               run: ansible-galaxy install -r ./ansible/requirements.yml
 
-            - name: install prom
+            - name: Install prom
               run: ansible-playbook -i ./ansible/inventory.ini ./ansible/promethus.yml
 
-            - name: install grafana
+            - name: Install grafana
               run: ansible-playbook -i ./ansible/inventory.ini ./ansible/grafana.yml
               
