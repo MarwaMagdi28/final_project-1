@@ -78,7 +78,7 @@ resource "aws_s3_bucket" "mybucket" {
 
 resource "aws_lambda_function" "my_lambda" {
     function_name      = "myLambdaFunction"
-    role               = "aws_iam_role.lambda_exec.arn
+    role               = aws_iam_role.lambda_exec.arn
     handler            = "index.handler"
     runtime            = "nodejs12.x"
     filename           = "lambda_function.zip"
