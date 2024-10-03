@@ -45,7 +45,7 @@ resource "aws_security_group" "allow_ssh_http" {
 resource "aws_instance" "monitoring" {
     ami           =  "ami-04dd23e62ed049936"
     instance_type =  "t2.micro"
-    security_groups = [aws_security_group.allow_ssh_http.name]
+    vpc_security_group_ids = [aws_security_group.existing_ssh_group.id]
 
     tags = {
         Name = "monitoring-instance"
