@@ -2,50 +2,9 @@ provider "aws" {
     region = "us-west-2"
 }
 
-resource "aws_security_group" "allow_ssh_http" {
-    name          = "allow_ssh"
-    description   = "allow ssh and http access"
-
-    ingress {
-        from_port   = 22
-        to_port     = 22
-        protocol    = "tcp"
-        cidr_blocks = ["0.0.0.0/0"]
-    }
-
-    ingress {
-        from_port   = 9090
-        to_port     = 9090
-        protocol    = "tcp"
-        cidr_blocks = ["0.0.0.0/0"]
-    }
-
-    ingress {
-        from_port   = 3000
-        to_port     = 3000
-        protocol    = "tcp"
-        cidr_blocks = ["0.0.0.0/0"]
-    }
-
-    ingress {
-        from_port   = 80
-        to_port     = 80
-        protocol    = "tcp"
-        cidr_blocks = ["0.0.0.0/0"]
-    }
-
-    egress {
-        from_port   = 0
-        to_port     = 0
-        protocol    = "-1"
-        cidr_blocks = ["0.0.0.0/0"]
-    }
-}
-
 resource "aws_instance" "monitoring" {
     ami           =  "ami-04dd23e62ed049936"
     instance_type =  "t2.micro"
-    vpc_security_group_ids = [aws_security_group.allow_ssh_http.id]
 
     tags = {
         Name = "monitoring-instance"
