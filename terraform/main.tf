@@ -14,7 +14,7 @@ resource "aws_instance" "monitoring" {
 resource "aws_db_instance" "default" {
     instance_class = "db.t2.small"  # Choose a supported instance class
     engine = "postgres"
-    engine_version = "15.3"  # Choose a supported engine version
+    engine_version = "16.3"  # Choose a supported engine version
     license_model = "postgresql-license"  # Or "bring-your-own-license" if applicable
     allocated_storage   = 20
     username            = "admin"
