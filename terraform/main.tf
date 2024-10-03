@@ -18,7 +18,7 @@ resource "aws_db_instance" "default" {
     license_model = "postgresql-license"  # Or "bring-your-own-license" if applicable
     allocated_storage   = 20
     username            = "moro"
-    password            = "moro@123"
+    password            = "moro123"
     publicly_accessible = true
     skip_final_snapshot = true
 
