@@ -2,12 +2,6 @@ provider "aws" {
     region = "us-west-2"
 }
 
-resource "aws_key_pair" "deployer" {
-    key_name    = "deployer-key"
-    public_key = file("~/.ssh/id_rsa.pub")
-}
-
-
 resource "aws_security_group" "allow_ssh_http" {
     name          = "allow_ssh"
     description   = "allow ssh and http access"
@@ -75,7 +69,6 @@ resource "aws_db_instance" "default" {
 
 resource "aws_s3_bucket_acl" "mybucket" {
     bucket = "mybucket"
-    acl    = "private"
 }
 
 resource "aws_lambda_function" "my_lambda" {
@@ -105,8 +98,12 @@ resource "aws_iam_role" "lambda_exec" {
 }
 
 
-resource "aws_cloudwatch_log_group" "lambda_log_group" {
-    name      =  "/aws/lambda/myLambdaFunction"
-    retention_in_days = 14
+data "aws_cloudwatch_log_group" "existing_log_group" {
+  name = "/aws/lambda/myLambdaFunction"
 }
 
+resource "aws_cloudwatch_log_group" "lambda_log_group" {
+  count             = length(data.aws_cloudwatch_log_group.existing_log_group) == 0 ? 1 : 0
+  name              = "/aws/lambda/myLambdaFunction"
+  retention_in_days = 14
+}
