@@ -79,17 +79,21 @@ resource "aws_s3_bucket_acl" "mybucket" {
     acl    = "private"
 }
 
+variable "lambda_zip_path" {
+  type = string
+}
+
+resource "local_exec" "create_zip" {
+  command = "zip -r ${var.lambda_zip_path} index.js"
+}
+
 resource "aws_lambda_function" "my_lambda" {
     function_name      = "myLambdaFunction"
     role               = aws_iam_role.lambda_exec.arn
     handler            = "index.handler"
     runtime            = "nodejs12.x"
     filename           = "lambda_function.zip"
-    source_code_hash   = filebase64sha256("lambda_function.zip")
-}
-
-resource "local_exec" "create_zip" {
-  command = "zip -r lambda_function.zip index.js"
+    source_code_hash   = filebase64sha256(VAR.lambda_zip_path)
 }
 
 resource "aws_iam_role" "lambda_exec" {
