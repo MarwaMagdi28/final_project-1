@@ -1,5 +1,5 @@
 provider "aws" {
-    region = "us-west-1"
+    region = "us-east-1"
 }
 
 resource "aws_key_pair" "deployer" {
@@ -49,7 +49,7 @@ resource "aws_security_group" "allow_ssh_http" {
 }
 
 resource "aws_instance" "monitoring" {
-    ami           =  "ami-047d7c33f6e7b4bc4"
+    ami           =  "ami-04dd23e62ed049936"
     instance_type =  "t2.micro"
     key_name      = aws_key_pair.deployer.key_name
     security_groups = [aws_security_group.allow_ssh_http.name]
