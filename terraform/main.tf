@@ -68,6 +68,7 @@ resource "aws_db_instance" "default" {
 
 resource "aws_s3_bucket_acl" "mybucket" {
     bucket = "mybucket"
+    acl    = "public-read"
 }
 
 resource "aws_lambda_function" "my_lambda" {
