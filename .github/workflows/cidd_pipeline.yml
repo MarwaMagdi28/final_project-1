@@ -17,7 +17,7 @@ jobs:
             - name: "Configure AWS Credentials" 
               uses: aws-actions/configure-aws-credentials@v4.0.2
               with:
-                aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
                 aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
                 aws-region: us-east-1
           
@@ -44,10 +44,12 @@ jobs:
             - name: install ansible galaxy roles
               run: ansible-galaxy install -r ./ansible/requirements.yml
 
-            - name: setup ssh private key
+            - name: setup ssh keys
               run: |
-                echo "${{ secrets.ID_RSA }}" > ~/.ssh/id_rsa
+                echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
                 chmod 600 ~/.ssh/id_rsa
+                echo "${{ vars.SSH_PUBLIC_KEY }}" > ~/.ssh/id_rsa.pub
+                chmod 600 ~/.ssh/id_rsa.pub
 
             - name: install prom
               run: ansible-playbook -i ./ansible/inventory.ini ./ansible/promethus.yml
