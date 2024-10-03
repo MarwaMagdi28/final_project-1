@@ -56,3 +56,4 @@ jobs:
 
             - name: install grafana
               run: ansible-playbook -i ./ansible/inventory.ini ./ansible/grafana.yml
+              
